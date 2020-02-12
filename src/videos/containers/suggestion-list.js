@@ -8,16 +8,31 @@ import SuggestionListLayout from '../components/suggestion-list-layout';
 import Empty from '../components/empty';
 import Separator from '../components/verticalSeparator'
 import Suggestion from '../components/suggestion';
+import {connect} from 'react-redux';
+
+function mapStateToProps(state) {
+    return {
+        list: state.suggestionList
+    }
+}
 
 /* Se crea una clase de javascript porque es un container */
 class SuggestionList extends Component {
     /* Función de flecha Javascript en la que no recibe parámetros y devuelve el componente Empty con un texto */
     renderEmpty = () => <Empty text="No hay sugerencias"/>
     itemSeparator = () => <Separator />
+    viewMovie = (item) => {
+        this.props.dispatch({
+            type: 'SET_SELECTED_MOVIE',
+            payload: {
+                movie: item
+            }
+        })
+    }
     renderItem = ({item}) => {
         return (
             /* Se le envían al componente Suggestion todos los parámetros de entrada de la función (...item) */
-            <Suggestion {...item} />
+            <Suggestion {...item} onPress={() => {this.viewMovie(item)}}/>
         )
     }
     keyExtractor = (item) => item.id.toString()
@@ -42,4 +57,4 @@ class SuggestionList extends Component {
     }
 }
 
-export default SuggestionList
+export default connect(mapStateToProps)(SuggestionList);
